@@ -14,7 +14,6 @@ for line in sys.stdin:
     line = line[space + 1:-1]
     line = line.split(',')
     curr_page_rank = float(line[0])
-    prev_page_rank = float(line[1])
 
     # Get the outlinks
     outlinks = line[2:]
@@ -27,9 +26,11 @@ for line in sys.stdin:
     # Value is the amount donated to the outlink
     for outlink in outlinks:
         donated_rank = curr_page_rank / len(outlinks)
-        sys.stdout.write(outlink + "\t" + str(donated_rank) + \
-                         "," + str(curr_page_rank) + "\n")
+        sys.stdout.write(outlink + "\t" + str(donated_rank) + "\n")
 
     # Pass the outlinks along. Use the special tag "D" to identify it (so that)
     # we don't do reduce on it
     sys.stdout.write("D" + node_id + "\t" + string_outlinks + "\n")
+
+    # Pass the old page ranks along. Use the special tag "O" to identify them
+    sys.stdout.write("O" + node_id + "\t" + str(curr_page_rank) + "\n")
