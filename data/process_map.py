@@ -18,7 +18,7 @@ import sys
 a = 0.85
 
 # Threshold for stopping
-threshold = 0.02
+threshold = 0.005
 
 outlinks_dict = {}
 new_rank_dict = {}
