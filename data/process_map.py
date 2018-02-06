@@ -40,6 +40,10 @@ for line in sys.stdin:
         old_rank = line[space + 1:-1]
         old_rank_dict[node_id] = old_rank
 
+    # Iteration #. Pass along
+    if line[0] == "I":
+        sys.stdout.write(line)
+
     # Case if we are dealing with the lines that contain the page ranks
     else:
         # Parse

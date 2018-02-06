@@ -7,6 +7,12 @@ import sys
 # The other lines should be in the form of:
 # node_id \t new_rank old_rank [outlinks]
 
+# The current iteration
+iteration = 1
+
+# The maximum # of iterations possible
+max_iter = 50
+
 input_data = []
 
 for line in sys.stdin:
@@ -14,17 +20,15 @@ for line in sys.stdin:
     if line[0:4] == "Done":
         space = line.find('\t')
         is_done = int(line[space:-1])
-
+    # Special line for the iteration number
+    elif line[0] == "I":
+        space = line.find('\t')
+        iteration = int(line[space:-1])
     else:
         input_data.append(line)
 
-# We are not done. Just output the input_data with "NodeID:" appended
-if is_done == 0:
-    for line in input_data:
-        sys.stdout.write("NodeId:" + line)
-
 # We are done. Output top 20 nodes
-if is_done == 1:
+if is_done == 1 or iteration >= max_iter:
     rank_dict = {}
 
     # Parse the input
@@ -50,3 +54,9 @@ if is_done == 1:
             break;
         sys.stdout.write("FinalRank:" + rank + "\t" + node_id + "\n")
         count += 1
+
+# We are not done. Just output the input_data with "NodeID:" appended
+if is_done == 0:
+    for line in input_data:
+        sys.stdout.write("NodeId:" + line)
+    sys.stdout.write("I\t" + str(iteration + 1) + "\n")

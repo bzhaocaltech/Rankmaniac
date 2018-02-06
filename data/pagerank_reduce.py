@@ -29,7 +29,7 @@ d = {}
 for line in sys.stdin:
     # If we are dealing with a line that just has the outlinks of a node or
     # the old rank of the node. Just pass it along to the next map function
-    if line[0] == "D" or line[0] == "O":
+    if line[0] == "D" or line[0] == "O" or line[0] == "I":
         sys.stdout.write(line)
 
     else:
