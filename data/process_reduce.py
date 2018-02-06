@@ -54,9 +54,8 @@ if is_done == 1 or iteration >= max_iter:
             break;
         sys.stdout.write("FinalRank:" + rank + "\t" + node_id + "\n")
         count += 1
-
 # We are not done. Just output the input_data with "NodeID:" appended
-if is_done == 0:
+else:
     for line in input_data:
         sys.stdout.write("NodeId:" + line)
     sys.stdout.write("I\t" + str(iteration + 1) + "\n")
