@@ -49,7 +49,7 @@ if is_done == 1 or iteration >= max_iter:
                 reverse = True)
 
     count = 0
-    for node_id, rank in rank_dict:
+    for rank, node_id in rank_dict:
         if count >= 20:
             break;
         sys.stdout.write("FinalRank:" + rank + "\t" + node_id + "\n")
