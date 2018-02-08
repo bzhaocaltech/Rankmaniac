@@ -1,3 +1,4 @@
 boto/
 *.txt
 results/
+local_test_data/
