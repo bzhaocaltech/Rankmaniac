@@ -11,7 +11,7 @@ import sys
 iteration = 1
 
 # The maximum # of iterations possible
-max_iter = 50
+max_iter = 2
 
 input_data = []
 
@@ -40,7 +40,7 @@ if is_done == 1 or iteration >= max_iter:
         # Get the current page rank
         line = line[space + 1:-1]
         line = line.split(',')
-        curr_page_rank = line[0]
+        curr_page_rank = float(line[0])
 
         rank_dict[node_id] = curr_page_rank
 
@@ -52,7 +52,7 @@ if is_done == 1 or iteration >= max_iter:
     for rank, node_id in rank_dict:
         if count >= 20:
             break;
-        sys.stdout.write("FinalRank:" + rank + "\t" + node_id + "\n")
+        sys.stdout.write("FinalRank:" + str(rank) + "\t" + node_id + "\n")
         count += 1
 # We are not done. Just output the input_data with "NodeID:" appended
 else:
