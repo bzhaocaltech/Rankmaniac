@@ -11,7 +11,7 @@ import sys
 iteration = 1
 
 # The maximum # of iterations possible
-max_iter = 50
+max_iter = 2
 
 input_data = []
 
