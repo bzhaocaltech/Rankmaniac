@@ -44,7 +44,7 @@ def decode(key, enc):
 
 
 def do_main(team_id, access_key, secret_key,
-			infile='input.txt', max_iter=50):
+			infile='input.txt', max_iter=2):
 	"""
 	Submits a new map-reduce job to Amazon EMR and waits for it to
 	finish executing.
@@ -118,12 +118,12 @@ def do_main(team_id, access_key, secret_key,
 	print('Terminated')
 
 if __name__ == '__main__':
-	
+
 	team_id        = sys.argv[1] # 'YOUR-TEAM-ID'
 	decoding_key   = sys.argv[2] # DO NOT HARD-CODE!
 	access_enc_key = sys.argv[3] # DO NOT HARD-CODE!
 	secret_enc_key = sys.argv[4] # DO NOT HARD-CODE!
-	
+
 	access_key = decode(decoding_key, access_enc_key)
 	secret_key = decode(decoding_key, secret_enc_key)
 

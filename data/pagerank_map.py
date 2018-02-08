@@ -28,11 +28,15 @@ for line in sys.stdin:
         string_outlinks = ','.join(outlinks)
 
         # Output:
-        # Keys are the outlinks the current node donates its page rank to
-        # Value is the amount donated to the outlink
-        for outlink in outlinks:
-            donated_rank = curr_page_rank / len(outlinks)
-            sys.stdout.write(outlink + "\t" + str(donated_rank) + "\n")
+        # If there are no outlinks, donate to itself
+        if len(outlinks) == 0:
+            sys.stdout.write(node_id + "\t" + str(curr_page_rank) + "\n")
+        else:
+            # Keys are the outlinks the current node donates its page rank to
+            # Value is the amount donated to the outlink
+            for outlink in outlinks:
+                donated_rank = curr_page_rank / len(outlinks)
+                sys.stdout.write(outlink + "\t" + str(donated_rank) + "\n")
 
         # Pass the outlinks along. Use the special tag "D" to identify it (so that)
         # we don't do reduce on it
