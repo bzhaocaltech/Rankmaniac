@@ -22,9 +22,6 @@ iteration = 1
 # The maximum # of iterations possible
 max_iter = 50
 
-# Threshold to determine if we are done with a node
-threshold = 0.001
-
 # The number of nodes to check if they switched positions
 num_checked = 25
 
@@ -80,7 +77,7 @@ if is_done == 1 or iteration >= max_iter:
     for rank, node_id in sorted_rank_dict:
         if nodes_outputted >= 20:
             break;
-        sys.stdout.write("FinalRank:" + str(rank) + "\t" + node_id + "\n")
+        sys.stdout.write("FinalRank:%f\t%s\n" % (rank, node_id))
         nodes_outputted += 1
 
 
@@ -94,12 +91,9 @@ else:
     curr_position = 1
     for rank, node_id in sorted_rank_dict:
         if outlinks_dict[node_id] != "":
-            sys.stdout.write("NodeId:" + node_id + "\t" + str(rank_dict[node_id]) + "," + \
-                             str(curr_position) + "," + \
-                             outlinks_dict[node_id] + "\n")
+            sys.stdout.write("NodeId:%s\t%f,%i,%s\n" % (node_id, rank_dict[node_id], curr_position, outlinks_dict[node_id]))
         else:
-            sys.stdout.write("NodeId:" + node_id + "\t" + str(rank_dict[node_id]) + "," + \
-                             str(curr_position) + "\n")
+            sys.stdout.write("NodeId:%s\t%f,%i\n" % (node_id, rank_dict[node_id], curr_position))
         curr_position += 1
 
-    sys.stdout.write("I\t" + str(iteration + 1) + "\n")
+    sys.stdout.write("I\t%i\n" % (iteration + 1))

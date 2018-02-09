@@ -45,4 +45,4 @@ for line in sys.stdin:
             d[node_id] = a * donated_value + (1 - a)
 
 for node, value in d.iteritems():
-    sys.stdout.write(node + "\t" + str(value) + "\n")
+    sys.stdout.write("%s\t%f\n" % (node, value))

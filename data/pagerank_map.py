@@ -33,19 +33,19 @@ for line in sys.stdin:
         # Output:
         # If there are no outlinks, donate to itself
         if len(outlinks) == 0:
-            sys.stdout.write(node_id + "\t" + curr_page_rank + "\n")
+            sys.stdout.write("%s\t%s\n" % (node_id, curr_page_rank))
         else:
             # Keys are the outlinks the current node donates its page rank to
             # Value is the amount donated to the outlink
             for outlink in outlinks:
                 donated_rank = float(curr_page_rank) / len(outlinks)
-                sys.stdout.write(outlink + "\t" + str(donated_rank) + "\n")
+                sys.stdout.write("%s\t%f\n" % (outlink, donated_rank))
 
         # Pass the outlinks along. Use the special tag "D" to identify it (so that)
         # we don't do reduce on it
-        sys.stdout.write("D" + node_id + "\t" + string_outlinks + "\n")
+        sys.stdout.write("D%s\t%s\n" % (node_id, string_outlinks))
 
         # Pass the position of the current node along (1 for the node with
         # best rank, 2 for the node next node ...) Use "O" to denote these
         # positions
-        sys.stdout.write("O" + node_id + "\t" + str(position) + "\n")
+        sys.stdout.write("O%s\t%i\n" % (node_id, position))
