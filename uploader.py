@@ -85,7 +85,7 @@ def do_main(team_id, access_key, secret_key,
 				try:
 					unbuff_stdout.write('.')
 					r.do_iter(pagerank_map, pagerank_reduce,
-							  process_map, process_reduce)
+							  process_map, process_reduce, 2, 2)
 					break
 				except EmrResponseError:
 					sleep(10) # call Amazon APIs infrequently

@@ -15,7 +15,7 @@ import sys
 # Occasionally incoming data will be in the form of:
 # "D + node_id" [outlinks]
 # or
-# "O + node_id" old_rank
+# "O + node_id" position
 # ignore these lines. Just pass them along
 
 # Alpha constant

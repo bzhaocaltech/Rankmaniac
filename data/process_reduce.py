@@ -7,7 +7,7 @@ import sys
 # Or of the form:
 # "D + node_id" [outlinks]
 # Or of the form:
-# "O + node_id" old_rank
+# "O + node_id" position
 
 # Job of this map function is to combine the data together such that data of the
 # form:
@@ -25,15 +25,15 @@ max_iter = 50
 # Threshold to determine if we are done with a node
 threshold = 0.001
 
-# The number of nodes we check to if they pass the threshold
-num_checked = 40
+# The number of nodes to check if they switched positions
+num_checked = 25
 
 # Alpha constant
 a = 0.85
 
 outlinks_dict = {}
 rank_dict = {}
-old_rank_dict = {}
+position_dict = {}
 
 for line in sys.stdin:
     # Case if we are dealing with the lines that contain the outlinks
@@ -46,8 +46,8 @@ for line in sys.stdin:
     elif line[0] == "O":
         space = line.find("\t")
         node_id = line[1:space]
-        old_rank = line[space + 1:-1]
-        old_rank_dict[node_id] = old_rank
+        position = line[space + 1:-1]
+        position_dict[node_id] = position
     # Special line for the iteration number
     elif line[0] == "I":
         space = line.find('\t')
@@ -64,13 +64,15 @@ for line in sys.stdin:
 sorted_rank_dict = sorted([(value, key) for (key, value) in rank_dict.iteritems()], \
                     reverse = True)
 
-# Check if we are done by comparing the ranks of the top (num_checked) nodes
+# Check if we are done by checking the old and new position of the nodes
+curr_position = 1
 for rank, node_id in sorted_rank_dict:
     if num_checked == 0:
         break;
-    if abs(rank - float(old_rank_dict[node_id])) > threshold:
+    if curr_position != int(position_dict[node_id]):
         is_done = False
     num_checked -= 1
+    curr_position += 1
 
 # We are done. Output top 20 nodes
 if is_done == 1 or iteration >= max_iter:
@@ -81,20 +83,23 @@ if is_done == 1 or iteration >= max_iter:
         sys.stdout.write("FinalRank:" + str(rank) + "\t" + node_id + "\n")
         nodes_outputted += 1
 
+
 # We are not done. Output the line in the correct format
 else:
+    # Assign ranks to the node ids without any nodes pointing to it
     for node_id in outlinks_dict:
-        # If the node id is not given a rank (no nodes were pointing to it). It will
-        # have a rank of just 1 - a
         if node_id not in rank_dict:
             rank_dict[node_id] = 1 - a
 
+    curr_position = 1
+    for rank, node_id in sorted_rank_dict:
         if outlinks_dict[node_id] != "":
             sys.stdout.write("NodeId:" + node_id + "\t" + str(rank_dict[node_id]) + "," + \
-                             old_rank_dict[node_id] + "," + \
+                             str(curr_position) + "," + \
                              outlinks_dict[node_id] + "\n")
         else:
             sys.stdout.write("NodeId:" + node_id + "\t" + str(rank_dict[node_id]) + "," + \
-                             old_rank_dict[node_id] + "\n")
+                             str(curr_position) + "\n")
+        curr_position += 1
 
     sys.stdout.write("I\t" + str(iteration + 1) + "\n")
