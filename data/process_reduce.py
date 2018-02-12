@@ -7,7 +7,7 @@ import sys
 # Or of the form:
 # "D + node_id" [outlinks]
 # Or of the form:
-# "O + node_id" position
+# "O + node_id" old_rank
 
 # Job of this map function is to combine the data together such that data of the
 # form:
@@ -20,17 +20,19 @@ is_done = True
 iteration = 1
 
 # The maximum # of iterations possible
-max_iter = 50
+max_iter = 27
 
-# The number of nodes to check if they switched positions
-num_checked = 25
+# Threshold to determine if we are done with a node
+threshold = 0.001
+
+curr_diff = 0
 
 # Alpha constant
 a = 0.85
 
 outlinks_dict = {}
 rank_dict = {}
-position_dict = {}
+old_rank_dict = {}
 
 for line in sys.stdin:
     # Case if we are dealing with the lines that contain the outlinks
@@ -43,8 +45,8 @@ for line in sys.stdin:
     elif line[0] == "O":
         space = line.find("\t")
         node_id = line[1:space]
-        position = line[space + 1:-1]
-        position_dict[node_id] = position
+        old_rank = line[space + 1:-1]
+        old_rank_dict[node_id] = old_rank
     # Special line for the iteration number
     elif line[0] == "I":
         space = line.find('\t')
@@ -61,39 +63,33 @@ for line in sys.stdin:
 sorted_rank_dict = sorted([(value, key) for (key, value) in rank_dict.iteritems()], \
                     reverse = True)
 
-# Check if we are done by checking the old and new position of the nodes
-curr_position = 1
+# Check if we are done by comparing the ranks of the top (num_checked) nodes
 for rank, node_id in sorted_rank_dict:
-    if num_checked == 0:
-        break;
-    if curr_position != int(position_dict[node_id]):
-        is_done = False
-    num_checked -= 1
-    curr_position += 1
+    curr_diff += abs(rank - float(old_rank_dict[node_id]))
 
 # We are done. Output top 20 nodes
-if is_done == 1 or iteration >= max_iter:
+if curr_diff / len(sorted_rank_dict) < threshold or iteration >= max_iter:
     nodes_outputted = 0
     for rank, node_id in sorted_rank_dict:
         if nodes_outputted >= 20:
             break;
-        sys.stdout.write("FinalRank:%f\t%s\n" % (rank, node_id))
+        sys.stdout.write("FinalRank:" + str(rank) + "\t" + node_id + "\n")
         nodes_outputted += 1
-
 
 # We are not done. Output the line in the correct format
 else:
-    # Assign ranks to the node ids without any nodes pointing to it
     for node_id in outlinks_dict:
+        # If the node id is not given a rank (no nodes were pointing to it). It will
+        # have a rank of just 1 - a
         if node_id not in rank_dict:
             rank_dict[node_id] = 1 - a
 
-    curr_position = 1
-    for rank, node_id in sorted_rank_dict:
         if outlinks_dict[node_id] != "":
-            sys.stdout.write("NodeId:%s\t%f,%i,%s\n" % (node_id, rank_dict[node_id], curr_position, outlinks_dict[node_id]))
+            sys.stdout.write("NodeId:" + node_id + "\t" + str(rank_dict[node_id]) + "," + \
+                             old_rank_dict[node_id] + "," + \
+                             outlinks_dict[node_id] + "\n")
         else:
-            sys.stdout.write("NodeId:%s\t%f,%i\n" % (node_id, rank_dict[node_id], curr_position))
-        curr_position += 1
+            sys.stdout.write("NodeId:" + node_id + "\t" + str(rank_dict[node_id]) + "," + \
+                             old_rank_dict[node_id] + "\n")
 
-    sys.stdout.write("I\t%i\n" % (iteration + 1))
+    sys.stdout.write("I\t" + str(iteration + 1) + "\n")

@@ -15,7 +15,7 @@ import sys
 # Occasionally incoming data will be in the form of:
 # "D + node_id" [outlinks]
 # or
-# "O + node_id" position
+# "O + node_id" old_rank
 # ignore these lines. Just pass them along
 
 # Alpha constant
@@ -45,4 +45,4 @@ for line in sys.stdin:
             d[node_id] = a * donated_value + (1 - a)
 
 for node, value in d.iteritems():
-    sys.stdout.write("%s\t%f\n" % (node, value))
+    sys.stdout.write(node + "\t" + str(value) + "\n")
